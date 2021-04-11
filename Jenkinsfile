@@ -36,7 +36,13 @@ pipeline {
  def getTerraformPath(){
         def tfHome= tool name: 'terraform-14', type: 'terraform'
         return tfHome
-}
+    }
+white_check_mark
+eyes
+raised_hands
+
+
+
 
 
 
