@@ -1,0 +1,6 @@
+STACK-S3-TF/src/main/tf/terraform.tfvars
+STACK_IAM-TF/src/main/tf/terraform.tfvars
+STACK-S3-TF/src/main/tf.terraform/*
+STACK_IAM-TF/src/main/tf.terraform/*
+
+
