@@ -45,9 +45,9 @@ variable "USERNAME" {
 variable "EFS_ID" {
   default = "WordpressEFS"
 }
-variable "RDS_ENDPOINT" {
-  default = wpinstance.cth4n4flvgsw.us-east-1.rds.amazonaws.com
-} 
+#variable "RDS_ENDPOINT" {
+  #default = wpinstance.cth4n4flvgsw.us-east-1.rds.amazonaws.com
+#} 
 #variable "INSTANCE_USERNAME" {
 #}
 
