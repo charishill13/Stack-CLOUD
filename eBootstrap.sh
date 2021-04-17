@@ -2,9 +2,7 @@
 #MOUNT EC2 INSTANCE TO EFS                          
 sudo yum update -y
 sudo yum install -y nfs-utils
-FILE_SYSTEM_ID=fs-bb29380e
-AVAILABILITY_ZONE=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone )
-REGION=${AVAILABILITY_ZONE:0:-1}
+#FILE_SYSTEM_ID=fs-bb29380e
 MOUNT_POINT=/var/www/html    
 sudo mkdir -p ${MOUNT_POINT}
 sudo chown ec2-user:ec2-user ${MOUNT_POINT}
@@ -33,7 +31,7 @@ cd /var/www/html
 wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
 mkdir phpMyAdmin && tar -xvzf phpMyAdmin-latest-all-languages.tar.gz -C phpMyAdmin --strip-components 1
 rm phpMyAdmin-latest-all-languages.tar.gz
-aws s3 cp s3://stackwpsheriff /var/www/html --recursive
+aws s3 cp s3://stacks3-charis /var/www/html --recursive
 sudo systemctl start mariadb
 sudo chkconfig httpd on
 sudo chkconfig mariadb on
