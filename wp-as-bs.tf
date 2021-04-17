@@ -2,13 +2,17 @@
 resource "aws_instance" "wptefs1" {
   ami           = "ami-0742b4e673072066f" #var.AMIS["use-east-1"]
   instance_type = "t2.micro"
-  user_data = file("${path.module}/eBootstrap.sh")
-  #user_data = templatefile("BOOTSTRAP_w_EFS.sh", {
-    #MOUNT_POINT = "/var/www/html",
-    #REGION = var.AWS_REGION,
-    #DB_NAME = var.DATABASE_NAME
-    #DB_USER = var.USERNAMEterraform 
-    #FILE_SYSTEM_ID = aws_efs_file_system.WordPressEFS.id})
+  #user_data = file("${path.module}/eBootstrap.sh")
+  user_data = templatefile("eBootstrap.sh", {
+    MOUNT_POINT = "/var/www/html",
+    REGION = var.AWS_REGION,
+    DB_NAME = var.DATABASE_NAME,
+    DB_USER = var.USERNAME, 
+    DB_PASSWORD = var.DB_PASSWORD
+    FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id
+    RDS_ENDPOINT = var.RDS_ENDPOINT
+    
+    })
   key_name = "MyEC2KeyPair"
   depends_on =[aws_efs_mount_target.mounthere]
   security_groups = [aws_security_group.wptefs_security.name]
@@ -116,7 +120,7 @@ resource "aws_launch_configuration" "WordPressEFS1" {
   name          = "wpefs_launch_config"
   image_id      = "ami-0742b4e673072066f"                ##"var.AMIS[us-east-1]"
   instance_type = "t2.micro"
-  key_name      =  var.PATH_TO_PRIVATE_KEY               ##var.PATH_TO_PRIVATE_KEY##
+  key_name      =  "MyEc2KeyPair"                ##var.PATH_TO_PRIVATE_KEY##
   security_groups = ["wptefs_security"]
   user_data = file("${path.module}/eBootstrap.sh")
   #user_data = templatefile("BOOTSTRAP_w_EFS.sh", {
