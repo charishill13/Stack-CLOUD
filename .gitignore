@@ -1,4 +1,4 @@
 STACK-S3-TF/src/main/tf.terraform/*
 STACK_IAM-TF/src/main/tf.terraform/*
-
+STACK-EC2-TF/.gitignore
 
