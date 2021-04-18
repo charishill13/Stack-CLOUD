@@ -1,6 +1,6 @@
 #CREATE AN EC2 INSTANCE w/BOOTSTRAP SCRIPT
 resource "aws_instance" "wptefs1" {
-  ami           = "ami-0742b4e673072066f" #var.AMIS["use-east-1"]
+  ami           =  var.AMIS["us-east-1"] #"ami-0742b4e673072066f"
   instance_type = "t2.micro"
   #user_data = file("${path.module}/eBootstrap.sh")
   user_data = templatefile("eBootstrap.sh", {
@@ -8,9 +8,10 @@ resource "aws_instance" "wptefs1" {
     REGION = var.AWS_REGION,
     DB_NAME = var.DATABASE_NAME,
     DB_USER = var.USERNAME, 
-    DB_PASSWORD = var.DB_PASSWORD
-    FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id
-    RDS_ENDPOINT = var.RDS_ENDPOINT
+    DB_PASSWORD = var.DB_PASSWORD,
+    RDS_ENDPOINT = var.RDS_ENDPOINT,
+    FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id,
+    
     
     })
   key_name = "MyEC2KeyPair"
@@ -120,7 +121,7 @@ resource "aws_launch_configuration" "WordPressEFS1" {
   name          = "wpefs_launch_config"
   image_id      = "ami-0742b4e673072066f"                ##"var.AMIS[us-east-1]"
   instance_type = "t2.micro"
-  key_name      =  "MyEc2KeyPair"                ##var.PATH_TO_PRIVATE_KEY##
+  key_name      =  var.PATH_TO_PRIVATE_KEY                ##var.PATH_TO_PRIVATE_KEY##
   security_groups = ["wptefs_security"]
   user_data = file("${path.module}/eBootstrap.sh")
   #user_data = templatefile("BOOTSTRAP_w_EFS.sh", {
