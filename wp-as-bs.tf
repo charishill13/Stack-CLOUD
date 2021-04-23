@@ -1,30 +1,6 @@
-#CREATE AN EC2 INSTANCE w/BOOTSTRAP SCRIPT
-resource "aws_instance" "wptefs1" {
-  ami           =  var.AMIS["us-east-1"] #"ami-0742b4e673072066f"
-  instance_type = "t2.micro"
-  #user_data = file("${path.module}/eBootstrap.sh")
-  user_data = templatefile("eBootstrap.sh", {
-    MOUNT_POINT = "/var/www/html",
-    REGION = var.AWS_REGION,
-    DB_NAME = var.DATABASE_NAME,
-    DB_USER = var.USERNAME, 
-    DB_PASSWORD = var.DB_PASSWORD,
-    RDS_ENDPOINT = var.RDS_ENDPOINT,
-    FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id,
-    
-    
-    })
-  key_name = "MyEC2KeyPair"
-  depends_on =[aws_efs_mount_target.mounthere]
-  security_groups = [aws_security_group.wptefs_security.name]
-    tags = {
-      Name = "wptefs1"
-  }
-}
-
 #CREATE SECURITY GROUP FOR EC2 INSTANCE w/ SSH, HTTP, EFS RULES
-resource "aws_security_group" "wptefs_security" {
-  name        = "wptefs_security"
+resource "aws_security_group" "secure_efswp" {
+  name        = "secure_efswp"
   description = "Allow SSH and HTTP"
   ingress {
     description = "SSH from VPC"
@@ -64,7 +40,6 @@ resource "aws_security_group" "wptefs_security" {
 
 #CREATE ELASTIC FILE SYSTEM
 resource "aws_efs_file_system" "WordpressEFS" {
-  encrypted = true
   throughput_mode = "bursting"
   tags = {
     Name = "WordpressEFS"
@@ -72,73 +47,123 @@ resource "aws_efs_file_system" "WordpressEFS" {
 }
 
 #CREATE EFS MOUNT TARGET
-resource "aws_efs_mount_target" "mounthere" {
-  depends_on = [aws_efs_file_system.WordpressEFS]
+resource "aws_efs_mount_target" "amounthere" {
+  file_system_id = aws_efs_file_system.WordpressEFS.id
+  subnet_id = var.my_aws_subnet["us-east-1a"]
+  security_groups = [aws_security_group.secure_efswp.id]
+}
+#CREATE EFS MOUNT TARGET
+resource "aws_efs_mount_target" "bmounthere2" {
+  file_system_id = aws_efs_file_system.WordpressEFS.id
+  subnet_id = var.my_aws_subnet["us-east-1b"]
+  security_groups = [aws_security_group.secure_efswp.id]
+}
+#CREATE EFS MOUNT TARGET
+resource "aws_efs_mount_target" "cmounthere" {
+  file_system_id = aws_efs_file_system.WordpressEFS.id
+  subnet_id = var.my_aws_subnet["us-east-1c"]
+  security_groups = [aws_security_group.secure_efswp.id]
+}
+#CREATE EFS MOUNT TARGET
+resource "aws_efs_mount_target" "dmounthere" {
   file_system_id = aws_efs_file_system.WordpressEFS.id
   subnet_id = var.my_aws_subnet["us-east-1d"]
-  security_groups = [aws_security_group.wptefs_security.id]
+  security_groups = [aws_security_group.secure_efswp.id]
 }
 
-#CREATE EFS MOUNT POINT
-resource "null_resource" "configure_nfs" {
-  depends_on = [aws_efs_mount_target.mounthere]
-connection {
-type     = "ssh"
-user     = "ec2-user"
-#private_key = tls_private_key.pritf_key.private_key_pem
-host     = aws_instance.wptefs1.public_ip
- }
+#CREATE EFS MOUNT TARGET
+resource "aws_efs_mount_target" "emounthere" {
+  file_system_id = aws_efs_file_system.WordpressEFS.id
+  subnet_id = var.my_aws_subnet["us-east-1e"]
+  security_groups = [aws_security_group.secure_efswp.id]
 }
-
-#CREATE EFS MOUNT Target
-#resource "aws_efs_mount_target" "gohere" {
-  #file_system_id = aws_efs_file_system.WordpressEFS.id
-  #subnet_id = var.my_aws_subnet["us-east-1e"]
-#}
-
-
-
-#GENERATE PRIVATE KEY
-#resource "tls_private_key" "pritf_key" {
-#algorithm = "RSA"
-#}
-
-#GENERATE KEY PAIR WITH PREVIOUSLY CREATED KEY
-#resource "aws_key_pair" "tf_key_pair" {
-  #key_name   = "tf_efs_key"
-  #public_key = tls_private_key.pritf_key.public_key_openssh
-#}
-
-#SAVE KEYPAIR FOR SSH CLIENT LOGIN
-#resource "null_resource" "save_key_pair"  {
-  #provisioner "local-exec" {
-  #command = "echo  ${tls_private_key.pritf_key.private_key_pem} > mykey.pem"
-#}
-#}
 
 #CREATE LAUNCH CONFIGURATION
 resource "aws_launch_configuration" "WordPressEFS1" {
-  name          = "wpefs_launch_config"
+  name_prefix   = "wpefs-lc-"
   image_id      = "ami-0742b4e673072066f"                ##"var.AMIS[us-east-1]"
   instance_type = "t2.micro"
-  key_name      =  var.PATH_TO_PRIVATE_KEY                ##var.PATH_TO_PRIVATE_KEY##
-  security_groups = ["wptefs_security"]
-  user_data = file("${path.module}/eBootstrap.sh")
-  #user_data = templatefile("BOOTSTRAP_w_EFS.sh", {
-    #MOUNT_POINT = "/var/www/html",
-    #REGION = var.AWS_REGION,
-    #DB_NAME = var. DATABASE_NAME
-    #DB_USER = var.USERNAME
-    #FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS
-    #depends_on = [aws_efs_mount_target.mounthere]})  
+  iam_instance_profile = aws_iam_instance_profile.s3_profile.name
+  security_groups = [aws_security_group.secure_efswp.name]
+  key_name = "MyEC2KeyPair"
+  #key_name      =  var.PATH_TO_PRIVATE_KEY                
+  #user_data = file("${path.module}/Bootstrap_Original_WP.sh")
+  user_data = templatefile("S3_Bootstrap_for_WP.sh", {
+    MOUNT_POINT = "/var/www/html",
+    REGION = var.AWS_REGION,
+    DB_NAME = var.DATABASE_NAME,
+    DB_USER = var.USERNAME, 
+    DB_PASSWORD = var.DATABASE_PASSWORD,
+    RDS_ENDPOINT = var.RDS_ENDPOINT,
+    FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id,
+    })
+  #lifecycle {
+    #create_before_destroy = true
+  #}
 }
+
+#CREATE S3 POLICY
+resource "aws_iam_policy" "policy" {
+    name        = "s3_policy"
+    description = "s3 admin access policy"
+
+    policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+        "Action": "s3:*",
+        "Effect": "Allow",
+        "Resource": "*" 
+        }
+    ]
+}
+    EOF
+} 
+
+#CREATE S3 ROLE 
+resource "aws_iam_role" "s3_role" {
+    name = "s3-role"
+    assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+            "Service": "ec2.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+    EOF 
+}
+
+#ATTACH POLICY TO S3 ROLE
+resource "aws_iam_policy_attachment" "s3_attach" {
+    name       = "s3-attachment"
+    policy_arn = aws_iam_policy.policy.arn
+    roles       =  [aws_iam_role.s3_role.name]
+} 
+
+#CREATE EC2 INTANCE WITH PROFILE ROLE
+resource "aws_iam_instance_profile" "s3_profile" {
+    name = "s3_profile"
+    role = aws_iam_role.s3_role.name
+}
+
 #CREATE AUTOSCALING GROUP
 resource "aws_autoscaling_group" "WPEFS1" {
   launch_configuration  = aws_launch_configuration.WordPressEFS1.name
-  availability_zones = ["us-east-1d"]
+  name_prefix        = "wordpress-as-"
+  availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
   desired_capacity   = 1
-  max_size           = 3
+  max_size           = 2
   min_size           = 1
   force_delete       = true
+  #lifecycle {
+    #create_before_destroy = true
+}
 
-  }
