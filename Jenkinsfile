@@ -10,29 +10,14 @@ pipeline {
                  sh "terraform init"
          }
          }
-         stage('terraform plan'){
-             steps {
-                 //sh "returnStatus: true, script: 'terraform workspace new dev'"
-                 //sh "terraform apply -auto-approve"
-                 sh "terraform plan -out=tfplan -input=false"
-             }
-         }
-        stage('Final Deployment Approval') {
+         stage('Terraform Destroy') {
               steps {
                 script {
-                def userInput = input(id: 'confirm', message: 'Apply Terraform?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm'] ])
+                def userInput = input(id: 'confirm', message: 'Destroy all resources?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Terraform Destroy', name: 'confirm'] ])
+                tfCmd('destroy', '-auto-approve')
              }
            }
-        }
-         stage('Terraform Apply'){
-             steps {
-                 //sh "returnStatus: true, script: 'terraform workspace new dev'"
-                 //sh "terraform apply -auto-approve"
-                 sh "terraform apply  -input=false tfplan"
-                 //sh "terraform destroy  -input=false tfplan"
-             }
-         }
-    }
+        }  
 }
  def getTerraformPath(){
         def tfHome= tool name: 'terraform-14', type: 'terraform'
