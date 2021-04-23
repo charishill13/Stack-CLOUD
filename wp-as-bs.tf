@@ -87,7 +87,6 @@ resource "aws_launch_configuration" "WordPressEFS1" {
   security_groups = [aws_security_group.secure_efswp.name]
   key_name = "MyEC2KeyPair"
   #key_name      =  var.PATH_TO_PRIVATE_KEY                
-  #user_data = file("${path.module}/Bootstrap_Original_WP.sh")
   user_data = templatefile("S3_Bootstrap_for_WP.sh", {
     MOUNT_POINT = "/var/www/html",
     REGION = var.AWS_REGION,
