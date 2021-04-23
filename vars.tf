@@ -36,23 +36,17 @@ variable "my_aws_subnet" {
   }
 }  
 
-variable "DATABASE_NAME" {
-  default = "stack-wordpress-db3"
-}
-variable "DB_PASSWORD" {
-  default = "stackinc"
-}
-variable "USERNAME" {
-  default = "wpuser"
-}
-variable "EFS_ID" {
+variable "DATABASE_NAME" {}
+variable "DATABASE_PASSWORD" {}
+
+variable "USERNAME" {}
+
+variable "FILE_SYSTEM_ID" {
   default = "WordpressEFS"
 }
-variable "RDS_ENDPOINT" {
-  default = "wpinstance.cth4n4flvgsw.us-east-1.rds.amazonaws.com"
-} 
-#variable "INSTANCE_USERNAME" {
-#}
+variable "RDS_ENDPOINT" {} 
+
+#variable "PATH_TO_PRIVATE_KEY" {}
 
  #variable "RDS_PASSWORD" {
 # }
