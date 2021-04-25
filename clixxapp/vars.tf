@@ -41,9 +41,9 @@ variable "DATABASE_PASSWORD" {}
 
 variable "USERNAME" {}
 
-variable "FILE_SYSTEM_ID" {
-  default = "WordpressEFS"
-}
+#variable "FILE_SYSTEM_ID" {
+  #default = "WordpressEFS"
+#}
 variable "RDS_ENDPOINT" {} 
 
 #variable "PATH_TO_PRIVATE_KEY" {}
