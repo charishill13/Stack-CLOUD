@@ -45,7 +45,7 @@ resource "aws_efs_file_system" "WordpressEFS" {
     Name = "WordpressEFS"
   }
 }
-
+/*
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "amounthere" {
   file_system_id = aws_efs_file_system.WordpressEFS.id
@@ -77,7 +77,7 @@ resource "aws_efs_mount_target" "emounthere" {
   subnet_id = var.my_aws_subnet["us-east-1e"]
   security_groups = [aws_security_group.secure_efswp.id]
 }
-
+*/
 #CREATE LAUNCH CONFIGURATION
 resource "aws_launch_configuration" "WordPressEFS1" {
   name_prefix   = "wpefs-lc-"
@@ -87,18 +87,22 @@ resource "aws_launch_configuration" "WordPressEFS1" {
   security_groups = [aws_security_group.secure_efswp.name]
   key_name = "MyEC2KeyPair"
   #key_name      =  var.PATH_TO_PRIVATE_KEY                
-  user_data = templatefile("S3_Bootstrap_for_WP.sh", {
+  user_data = templatefile("wordpressuserdata.sh", {
     MOUNT_POINT = "/var/www/html",
     REGION = var.AWS_REGION,
     DB_NAME = var.DATABASE_NAME,
     DB_USER = var.USERNAME, 
     DB_PASSWORD = var.DATABASE_PASSWORD,
+    MYSQL_PASSWORD=var.MYSQL_PASSWORD
+    MYSQL_PASS=var.MYSQL_PASS
+    MYSQL_USER=var.MYSQL_USER
     RDS_ENDPOINT = var.RDS_ENDPOINT,
     FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id,
     })
-  #lifecycle {
-    #create_before_destroy = true
-  #}
+  
+  tags = {
+    Name = "wpefs"
+  }
 }
 
 #CREATE S3 POLICY
