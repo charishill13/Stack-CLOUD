@@ -31,18 +31,17 @@ wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
 mkdir phpMyAdmin && tar -xvzf phpMyAdmin-latest-all-languages.tar.gz -C phpMyAdmin --strip-components 1
 rm phpMyAdmin-latest-all-languages.tar.gz
 #WEBSITE LOCATION
-aws s3 cp s3://owonikokoadventureswp /var/www/html --recursive
+#aws s3 cp s3://owonikokoadventureswp /var/www/html --recursive
+git clone https://github.com/stackitgit/CliXX_Retail_Repository.git
+cp -r CliXX_Retail_Repository/* /var/www/html
 #START MARIADB
-sudo systemctl start mariadb
 sudo chkconfig httpd on
-sudo chkconfig mariadb on
 sudo systemctl status httpd
-sudo systemctl status mariadb
 #####INSTALL WORDPRESS####
 cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
 #cp -r wordpress/* /var/www/html/
 sudo sed -i 's/database_name_here/${DB_NAME}/' /var/www/html/wp-config.php
-sudo sed -i 's/username_here/${DB_USER}/' /var/www/html/wp-config.php
+sudo sed -i 's/username_here/${MYSQL_USER}/' /var/www/html/wp-config.php
 sudo sed -i 's/password_here/${DB_PASSWORD}/' /var/www/html/wp-config.php
 sudo sed -i 's/localhost/${RDS_ENDPOINT}/' /var/www/html/wp-config.php
 ## ALLOW WORDPRESS TO USE PERMALINKS###
