@@ -97,10 +97,7 @@ resource "aws_launch_configuration" "WordPressEFS1" {
     RDS_ENDPOINT = var.RDS_ENDPOINT,
     FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id
     })
-  tags = {
-      Name = "wpefs"
   }
-}
 
 #CREATE S3 POLICY
 resource "aws_iam_policy" "policy" {
