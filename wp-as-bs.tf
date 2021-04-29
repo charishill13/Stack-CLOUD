@@ -95,11 +95,10 @@ resource "aws_launch_configuration" "WordPressEFS1" {
     MYSQL_PASS=var.MYSQL_PASS,
     MYSQL_USER=var.MYSQL_USER,
     RDS_ENDPOINT = var.RDS_ENDPOINT,
-    FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id,
+    FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id
     })
-  
   tags = {
-    Name = "wpefs"
+      Name = "wpefs"
   }
 }
 
