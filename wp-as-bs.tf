@@ -91,11 +91,9 @@ resource "aws_launch_configuration" "WordPressEFS1" {
     MOUNT_POINT = "/var/www/html",
     REGION = var.AWS_REGION,
     DB_NAME = var.DATABASE_NAME,
-    DB_USER = var.USERNAME, 
     DB_PASSWORD = var.DATABASE_PASSWORD,
-    MYSQL_PASSWORD=var.MYSQL_PASSWORD
-    MYSQL_PASS=var.MYSQL_PASS
-    MYSQL_USER=var.MYSQL_USER
+    MYSQL_PASS=var.MYSQL_PASS,
+    MYSQL_USER=var.MYSQL_USER,
     RDS_ENDPOINT = var.RDS_ENDPOINT,
     FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id,
     })
