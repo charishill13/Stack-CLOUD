@@ -32,8 +32,9 @@ mkdir phpMyAdmin && tar -xvzf phpMyAdmin-latest-all-languages.tar.gz -C phpMyAdm
 rm phpMyAdmin-latest-all-languages.tar.gz
 #WEBSITE LOCATION
 #aws s3 cp s3://owonikokoadventureswp /var/www/html --recursive
+sudo yum install git -y
 git clone https://github.com/stackitgit/CliXX_Retail_Repository.git
-cp -r CliXX_Retail_Repository/* /var/www/html
+cp -r CliXX_Retail_Repository/* /var/www/html 
 #START MARIADB
 sudo chkconfig httpd on
 sudo systemctl status httpd
