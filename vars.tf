@@ -38,12 +38,18 @@ variable "my_aws_subnet" {
 
 variable "DATABASE_NAME" {}
 variable "DATABASE_PASSWORD" {}
-variable "MYSQL_PASS" {}
-variable "MYSQL_USER" {}
+variable "SNAPSHOT_NAME"{}
+
+
+variable "USERNAME" {}
+
 #variable "FILE_SYSTEM_ID" {
   #default = "WordpressEFS"
 #}
 variable "RDS_ENDPOINT" {} 
+#variable "SECURITY_GROUP" {
+  #default= "sg-065ef1ecb1c932f66"
+#}
 
 #variable "PATH_TO_PRIVATE_KEY" {}
 
@@ -52,3 +58,5 @@ variable "RDS_ENDPOINT" {}
 
 #variable "INSTANCE_USERNAME" {
 #}
+
+
