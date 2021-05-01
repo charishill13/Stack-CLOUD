@@ -127,9 +127,9 @@ resource "aws_launch_configuration" "WordPressEFS1" {
 }
 
 #CREATE S3 POLICY
-resource "aws_iam_policy" "policy" {
-    name        = "s3_policy"
-    description = "s3 admin access policy"
+resource "aws_iam_policy" "clixxpolicy" {
+    name        = "s3_clixx_policy"
+    description = "s3 admin access clixxpolicy"
 
     policy = <<EOF
 {
@@ -146,8 +146,8 @@ resource "aws_iam_policy" "policy" {
 } 
 
 #CREATE S3 ROLE 
-resource "aws_iam_role" "s3_role" {
-    name = "s3-role"
+resource "aws_iam_role" "clixxapp" {
+    name = "clixxapp-role"
     assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -166,22 +166,22 @@ resource "aws_iam_role" "s3_role" {
 }
 
 #ATTACH POLICY TO S3 ROLE
-resource "aws_iam_policy_attachment" "s3_attach" {
-    name       = "s3-attachment"
-    policy_arn = aws_iam_policy.policy.arn
-    roles       =  [aws_iam_role.s3_role.name]
+resource "aws_iam_policy_attachment" "s3_attach_clixx" {
+    name       = "s3-attachment-clixx"
+    policy_arn = aws_iam_policy.clixxpolicy.arn
+    roles       =  [aws_iam_role.clixxapp-role-clixx.name]
 } 
 
 #CREATE EC2 INTANCE WITH PROFILE ROLE
-resource "aws_iam_instance_profile" "s3_profile" {
-    name = "s3_profile"
-    role = aws_iam_role.s3_role.name
+resource "aws_iam_instance_profile" "s3_clixx_profile" {
+    name = "s3_clixx_profile"
+    role = aws_iam_role.clixxapp-role-clixx.name
 }
 
 #CREATE AUTOSCALING GROUP
 resource "aws_autoscaling_group" "WPEFS1" {
   launch_configuration  = aws_launch_configuration.WordPressEFS1.name
-  name_prefix        = "wordpress-as-"
+  name_prefix        = "clixxapp-as-"
   availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
   desired_capacity   = 1
   max_size           = 2
