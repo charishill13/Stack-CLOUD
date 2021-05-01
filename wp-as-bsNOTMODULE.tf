@@ -53,41 +53,41 @@ resource "aws_security_group" "secure_clixxapp" {
 }
 
 #CREATE ELASTIC FILE SYSTEM
-resource "aws_efs_file_system" "WordpressEFS" {
+resource "aws_efs_file_system" "wordpressclixx" {
   throughput_mode = "bursting"
   tags = {
-    Name = "WordpressEFS"
+    Name = "wordpressclixx"
   }
 }
 
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "amounthere" {
-  file_system_id = aws_efs_file_system.WordpressEFS.id
+  file_system_id = aws_efs_file_system.wordpressclixx.id
   subnet_id = var.my_aws_subnet["us-east-1a"]
   security_groups = [aws_security_group.secure_clixxapp.id]
 }
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "bmounthere2" {
-  file_system_id = aws_efs_file_system.WordpressEFS.id
+  file_system_id = aws_efs_file_system.wordpressclixx.id
   subnet_id = var.my_aws_subnet["us-east-1b"]
   security_groups = [aws_security_group.secure_clixxapp.id]
 }
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "cmounthere" {
-  file_system_id = aws_efs_file_system.WordpressEFS.id
+  file_system_id = aws_efs_file_system.wordpressclixx.id
   subnet_id = var.my_aws_subnet["us-east-1c"]
   security_groups = [aws_security_group.secure_clixxapp.id]
 }
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "dmounthere" {
-  file_system_id = aws_efs_file_system.WordpressEFS.id
+  file_system_id = aws_efs_file_system.wordpressclixx.id
   subnet_id = var.my_aws_subnet["us-east-1d"]
   security_groups = [aws_security_group.secure_clixxapp.id]
 }
 
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "emounthere" {
-  file_system_id = aws_efs_file_system.WordpressEFS.id
+  file_system_id = aws_efs_file_system.wordpressclixx.id
   subnet_id = var.my_aws_subnet["us-east-1e"]
   security_groups = [aws_security_group.secure_clixxapp.id]
 }
@@ -119,7 +119,7 @@ resource "aws_launch_configuration" "WordPressEFS1" {
     DB_PASSWORD = var.DATABASE_PASSWORD, 
     RDS_ENDPOINT = aws_db_instance.restore.address,
     SNAPSHOT_NAME=var.SNAPSHOT_NAME,
-    FILE_SYSTEM_ID = aws_efs_file_system.WordpressEFS.id,
+    FILE_SYSTEM_ID = aws_efs_file_system.wordpressclixx.id,
     })
   #lifecycle {
     #create_before_destroy = true
