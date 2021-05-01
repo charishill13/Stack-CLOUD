@@ -1,6 +1,6 @@
 #CREATE SECURITY GROUP FOR EC2 INSTANCE w/ SSH, HTTP, EFS RULES
-resource "aws_security_group" "secure_efswp" {
-  name        = "secure_efswp"
+resource "aws_security_group" "secure_clixxapp" {
+  name        = "secure_clixxapp"
   description = "Allow SSH and HTTP"
   ingress {
     description = "SSH from VPC"
@@ -64,39 +64,39 @@ resource "aws_efs_file_system" "WordpressEFS" {
 resource "aws_efs_mount_target" "amounthere" {
   file_system_id = aws_efs_file_system.WordpressEFS.id
   subnet_id = var.my_aws_subnet["us-east-1a"]
-  security_groups = [aws_security_group.secure_efswp.id]
+  security_groups = [aws_security_group.secure_clixxapp.id]
 }
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "bmounthere2" {
   file_system_id = aws_efs_file_system.WordpressEFS.id
   subnet_id = var.my_aws_subnet["us-east-1b"]
-  security_groups = [aws_security_group.secure_efswp.id]
+  security_groups = [aws_security_group.secure_clixxapp.id]
 }
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "cmounthere" {
   file_system_id = aws_efs_file_system.WordpressEFS.id
   subnet_id = var.my_aws_subnet["us-east-1c"]
-  security_groups = [aws_security_group.secure_efswp.id]
+  security_groups = [aws_security_group.secure_clixxapp.id]
 }
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "dmounthere" {
   file_system_id = aws_efs_file_system.WordpressEFS.id
   subnet_id = var.my_aws_subnet["us-east-1d"]
-  security_groups = [aws_security_group.secure_efswp.id]
+  security_groups = [aws_security_group.secure_clixxapp.id]
 }
 
 #CREATE EFS MOUNT TARGET
 resource "aws_efs_mount_target" "emounthere" {
   file_system_id = aws_efs_file_system.WordpressEFS.id
   subnet_id = var.my_aws_subnet["us-east-1e"]
-  security_groups = [aws_security_group.secure_efswp.id]
+  security_groups = [aws_security_group.secure_clixxapp.id]
 }
 #WAKE UP CLIXX APPLICATION SNAPSHOT
 resource "aws_db_instance" "restore" {
   instance_class      = "db.t2.micro"
   name                = ""
   snapshot_identifier = var.SNAPSHOT_NAME
-  vpc_security_group_ids = [aws_security_group.secure_efswp.id]
+  vpc_security_group_ids = [aws_security_group.secure_clixxapp.id]
   publicly_accessible= true
   skip_final_snapshot = true
 }
@@ -108,7 +108,7 @@ resource "aws_launch_configuration" "WordPressEFS1" {
   instance_type = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.s3_profile.name
   key_name = "MyEC2KeyPair"
-  security_groups = [aws_security_group.secure_efswp.id] 
+  security_groups = [aws_security_group.secure_clixxapp.id] 
   depends_on = [aws_db_instance.restore]
   #key_name      =  var.PATH_TO_PRIVATE_KEY                
   user_data = templatefile("clixxapp/wordpressuserdata.sh", {
