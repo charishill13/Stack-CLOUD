@@ -102,7 +102,7 @@ resource "aws_db_instance" "restore" {
 }
 
 #CREATE LAUNCH CONFIGURATION
-resource "aws_launch_configuration" "WordPressEFS1" {
+resource "aws_launch_configuration" "WordPressClixx" {
   name = "wordpressdbclixx"
   image_id      = "ami-0742b4e673072066f"                ##"var.AMIS[us-east-1]"
   instance_type = "t2.micro"
@@ -179,8 +179,8 @@ resource "aws_iam_instance_profile" "s3_clixx_profile" {
 }
 
 #CREATE AUTOSCALING GROUP
-resource "aws_autoscaling_group" "WPEFS1" {
-  launch_configuration  = aws_launch_configuration.WordPressEFS1.name
+resource "aws_autoscaling_group" "WordPressClixx" {
+  launch_configuration  = aws_launch_configuration.WordPressClixx.name
   name_prefix        = "clixxapp-as-"
   availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
   desired_capacity   = 1
