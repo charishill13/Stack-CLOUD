@@ -38,7 +38,7 @@ variable "my_aws_subnet" {
 
 variable "DATABASE_NAME" {}
 variable "DATABASE_PASSWORD" {}
-variable "SNAPSHOT_NAME"{}
+#variable "SNAPSHOT_NAME"{}
 
 
 variable "USERNAME" {}
