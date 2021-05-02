@@ -95,7 +95,7 @@ resource "aws_efs_mount_target" "emounthere" {
 resource "aws_db_instance" "restore" {
   instance_class      = "db.t2.micro"
   name                = ""
-  snapshot_identifier = var.SNAPSHOT_NAME
+  snapshot_identifier = "clixxbdsnap"
   vpc_security_group_ids = [aws_security_group.secure_clixxapp.id]
   publicly_accessible= true
   skip_final_snapshot = true
