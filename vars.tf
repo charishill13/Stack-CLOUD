@@ -41,7 +41,7 @@ variable "DATABASE_PASSWORD" {}
 #variable "SNAPSHOT_NAME"{}
 
 
-variable "USERNAME" {}
+#variable "USERNAME" {}
 
 #variable "FILE_SYSTEM_ID" {
   #default = "WordpressEFS"
