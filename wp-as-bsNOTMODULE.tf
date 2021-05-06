@@ -106,7 +106,7 @@ resource "aws_launch_configuration" "WordPressClixx" {
   name = "wordpressdbclixx"
   image_id      = "ami-0742b4e673072066f"                ##"var.AMIS[us-east-1]"
   instance_type = "t2.micro"
-  iam_instance_profile = aws_iam_instance_profile.clixxapp-role-clixx.name
+  iam_instance_profile = aws_iam_instance_profile.clixxapprole.name
   key_name = "MyEC2KeyPair"
   security_groups = [aws_security_group.secure_clixxapp.id] 
   depends_on = [aws_db_instance.restore]
@@ -146,7 +146,7 @@ resource "aws_iam_policy" "clixxpolicy" {
 } 
 
 #CREATE S3 ROLE 
-resource "aws_iam_role" "clixxapp" {
+resource "aws_iam_role" "clixxapprole" {
     name = "clixxapprole"
     assume_role_policy = <<EOF
 {
