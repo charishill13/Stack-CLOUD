@@ -42,7 +42,7 @@ sudo systemctl status httpd
 cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
 #cp -r wordpress/* /var/www/html/
 sudo sed -i 's/database_name_here/${DB_NAME}/' /var/www/html/wp-config.php
-sudo sed -i 's/username_here/${MYSQL_USER}/' /var/www/html/wp-config.php
+sudo sed -i 's/username_here/${USERNAME}/' /var/www/html/wp-config.php
 sudo sed -i 's/password_here/${DB_PASSWORD}/' /var/www/html/wp-config.php
 sudo sed -i 's/localhost/${RDS_ENDPOINT}/' /var/www/html/wp-config.php
 ## ALLOW WORDPRESS TO USE PERMALINKS###
