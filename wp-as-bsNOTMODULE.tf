@@ -111,11 +111,11 @@ resource "aws_launch_configuration" "WordPressClixx" {
   security_groups = [aws_security_group.secure_clixxapp.id] 
   depends_on = [aws_db_instance.restore]
   #key_name      =  var.PATH_TO_PRIVATE_KEY                
-  user_data = templatefile("clixxapp/wordpressuserdata.sh", {
+  user_data = templatefile("wp-as-bsclixx.sh", {
     MOUNT_POINT = "/var/www/html",
     REGION = var.AWS_REGION,
     DB_NAME = var.DATABASE_NAME,
-    DB_USER = var.USERNAME, 
+    DB_USER =var.USERNAME, 
     DB_PASSWORD = var.DATABASE_PASSWORD, 
     RDS_ENDPOINT = aws_db_instance.restore.address,
     #SNAPSHOT_NAME=var.SNAPSHOT_NAME,
