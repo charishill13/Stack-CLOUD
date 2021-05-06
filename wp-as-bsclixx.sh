@@ -62,8 +62,8 @@ sudo systemctl start httpd
 ###UPDATE WORDPRESS URL TO LATEST INSTANCE IP ADDRESS###
 sudo /bin/cat <<EOF >/home/ec2-user/postinstall.sh
 MYSQL_USER=${USERNAME}
-MYSQL_PASS=${DATABASE_PASSWORD}
-mysql -h wpinstance1.cth4n4flvgsw.us-east-1.rds.amazonaws.com -D stack-wordpress-db3 -u\${MYSQL_USER} -p\${MYSQL_PASS} <<EOT
+MYSQL_PASS=${DB_PASSWORD}
+mysql -h wpinstance1.cth4n4flvgsw.us-east-1.rds.amazonaws.com -D stack-wordpress-db3 -u\${USERNAME} -p\${DB_PASSWORD} <<EOT
 use stack-wordpress-db3;
 UPDATE wp_options SET option_value = "http://`curl http://169.254.169.254/latest/meta-data/public-ipv4`" WHERE option_value LIKE 'http%';
 EOT
