@@ -115,15 +115,11 @@ resource "aws_launch_configuration" "WordPressClixx" {
     MOUNT_POINT = "/var/www/html",
     REGION = var.AWS_REGION,
     DB_NAME = var.DATABASE_NAME,
-    DB_USER =var.USERNAME, 
+    USERNAME =var.USERNAME, 
     DB_PASSWORD = var.DATABASE_PASSWORD, 
     RDS_ENDPOINT = aws_db_instance.restore.address,
-    #SNAPSHOT_NAME=var.SNAPSHOT_NAME,
     FILE_SYSTEM_ID = aws_efs_file_system.wordpressclixx.id,
     })
-  #lifecycle {
-    #create_before_destroy = true
-  #}
 }
 
 #CREATE S3 POLICY
