@@ -180,7 +180,7 @@ resource "aws_autoscaling_group" "WordPressClixx" {
   launch_configuration  = aws_launch_configuration.WordPressClixx.name
   name_prefix        = "clixxapp-as-"
   #availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
-  availability_zone = "us-east-1d"
+  availability_zones = ["us-east-1d"]
   desired_capacity   = 1
   max_size           = 2
   min_size           = 1
