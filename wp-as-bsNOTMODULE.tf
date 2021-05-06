@@ -106,7 +106,7 @@ resource "aws_launch_configuration" "WordPressClixx" {
   name = "wordpressdbclixx"
   image_id      = "ami-0742b4e673072066f"                ##"var.AMIS[us-east-1]"
   instance_type = "t2.micro"
-  iam_instance_profile = aws_iam_instance_profile.s3_profile.name
+  iam_instance_profile = aws_iam_instance_profile.clixxapp-role-clixx.name
   key_name = "MyEC2KeyPair"
   security_groups = [aws_security_group.secure_clixxapp.id] 
   depends_on = [aws_db_instance.restore]
@@ -118,7 +118,7 @@ resource "aws_launch_configuration" "WordPressClixx" {
     DB_USER = var.USERNAME, 
     DB_PASSWORD = var.DATABASE_PASSWORD, 
     RDS_ENDPOINT = aws_db_instance.restore.address,
-    SNAPSHOT_NAME=var.SNAPSHOT_NAME,
+    #SNAPSHOT_NAME=var.SNAPSHOT_NAME,
     FILE_SYSTEM_ID = aws_efs_file_system.wordpressclixx.id,
     })
   #lifecycle {
@@ -147,7 +147,7 @@ resource "aws_iam_policy" "clixxpolicy" {
 
 #CREATE S3 ROLE 
 resource "aws_iam_role" "clixxapp" {
-    name = "clixxapp-role"
+    name = "clixxapprole"
     assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -169,13 +169,13 @@ resource "aws_iam_role" "clixxapp" {
 resource "aws_iam_policy_attachment" "s3_attach_clixx" {
     name       = "s3-attachment-clixx"
     policy_arn = aws_iam_policy.clixxpolicy.arn
-    roles       =  [aws_iam_role.clixxapp-role-clixx.name]
+    roles       =  [aws_iam_role.clixxapprole.name]
 } 
 
 #CREATE EC2 INTANCE WITH PROFILE ROLE
 resource "aws_iam_instance_profile" "s3_clixx_profile" {
     name = "s3_clixx_profile"
-    role = aws_iam_role.clixxapp-role-clixx.name
+    role = aws_iam_role.clixxapprole.name
 }
 
 #CREATE AUTOSCALING GROUP
