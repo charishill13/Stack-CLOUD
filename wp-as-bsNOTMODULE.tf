@@ -106,7 +106,7 @@ resource "aws_launch_configuration" "WordPressClixx" {
   name = "wordpressdbclixx"
   image_id      = "ami-0742b4e673072066f"                ##"var.AMIS[us-east-1]"
   instance_type = "t2.micro"
-  iam_instance_profile = aws_iam_instance_profile.clixxapprole.name
+  iam_instance_profile = aws_iam_instance_profile.s3_clixx_profile.name
   key_name = "MyEC2KeyPair"
   security_groups = [aws_security_group.secure_clixxapp.id] 
   depends_on = [aws_db_instance.restore]
