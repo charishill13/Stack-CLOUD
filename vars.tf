@@ -36,13 +36,10 @@ variable "my_aws_subnet" {
   }
 }  
 
+variable "USERNAME" {}
 variable "DATABASE_NAME" {}
 variable "DATABASE_PASSWORD" {}
 #variable "SNAPSHOT_NAME"{}
-
-
-#variable "USERNAME" {}
-
 #variable "FILE_SYSTEM_ID" {
   #default = "WordpressEFS"
 #}
