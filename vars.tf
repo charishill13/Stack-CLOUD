@@ -42,7 +42,7 @@ variable "DATABASE_PASSWORD" {}
 #variable "SNAPSHOT_NAME"{}
 #variable "FILE_SYSTEM_ID" {
   #default = "WordpressEFS"
-#}
+#} 
 variable "RDS_ENDPOINT" {} 
 #variable "SECURITY_GROUP" {
   #default= "sg-065ef1ecb1c932f66"
