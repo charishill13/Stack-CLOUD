@@ -13,8 +13,8 @@ pipeline {
          stage('terraform plan'){
              steps {
                  //sh "returnStatus: true, script: 'terraform workspace new dev'"
-                 sh "terraform apply -auto-approve"
-                 //sh "terraform plan -out=tfplan -input=false"
+                 //sh "terraform apply -auto-approve"
+                 sh "terraform plan -out=tfplan -input=false"
              }
          }
         stage('Final Deployment Approval') {
