@@ -89,7 +89,7 @@ resource "aws_subnet" "ORACLE_PRIVB" {
     Name = "ORACLE_PRIVB"
   }
 }
-/*
+
 #CREATE PUBLIC SECURITY GROUPS
 resource "aws_security_group" "PUBSGA" {
   name        = "PUBSGA"
@@ -125,7 +125,7 @@ resource "aws_security_group" "PUBSGA" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
+/*
 resource "aws_security_group" "loadbalancersga" {
   name        = "loadbalancersga"
   vpc_id     = aws_vpc.clixxappvpc.id
@@ -137,9 +137,7 @@ resource "aws_security_group" "loadbalancersga" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-
-##################################
+*/
 
 resource "aws_security_group" "pubtoapp" {
   name        = "pubtoapp"
@@ -167,7 +165,7 @@ resource "aws_security_group" "pubtoapp" {
     security_groups = [aws_security_group.PUBSGA.id]
   }
 }
-
+/* 
 resource "aws_security_group" "apptordsb" {
   name        = "apptordsb"
   vpc_id     = aws_vpc.clixxappvpc.id
