@@ -234,7 +234,7 @@ resource "aws_security_group" "rdstooracleb" {
     security_groups = [aws_security_group.pubtoapp.id,aws_security_group.apptordsb.id,]
  }
 }
-/*
+
 #CREATE A DATABASE SUBNET GROUP
 resource "aws_db_subnet_group" "dbsubnetgrp" {
   name        = "dbsubnetgrp"
@@ -252,8 +252,8 @@ resource "aws_db_instance" "CustomClixxDB" {
 }
 
 #CREATE LAUNCH CONFIGURATION
-resource "aws_launch_configuration" "CustomClixxAS" {
-  name = "wordpressdbclixx"
+resource "aws_launch_configuration" "CustomClixxAS" { 
+  name = "CUSTOMCLIXXCONFIG"
   image_id      = "ami-0742b4e673072066f"               
   instance_type = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.s3_clixx_profile.name
@@ -273,13 +273,13 @@ resource "aws_launch_configuration" "CustomClixxAS" {
     })
 }
 
-#CREATE TWO AUTOSCALING GROUPS FOR EACH AVAILIBLITY ZONE
+#CREATE AUTOSCALING GROUP FOR AVAILIBLITY ZONE A
 resource "aws_autoscaling_group" "CustomClixxASA" {
   launch_configuration  = aws_launch_configuration.CustomClixxAS.name
   target_group_arns = [aws_lb_target_group.lbtarget.arn]
   name_prefix        = "clixxzoneb-"
   #availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
-  vpc_zone_identifier       = [aws_subnet.APP_PRIVA.id]
+  vpc_zone_identifier= [aws_subnet.APP_PRIVA.id, aws_subnet.APP_PRIVB.id]
   desired_capacity   = 1
   max_size           = 2
   min_size           = 1
@@ -290,7 +290,7 @@ resource "aws_autoscaling_attachment" "attachclixxa" {
   autoscaling_group_name = aws_autoscaling_group.CustomClixxASA.id
   alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
 }
-
+/*
 #CREATE TWO AUTOSCALING GROUPS FOR EACH AVAILIBLITY ZONE
 resource "aws_autoscaling_group" "CustomClixxASB" {
   launch_configuration  = aws_launch_configuration.CustomClixxAS.name
@@ -302,13 +302,12 @@ resource "aws_autoscaling_group" "CustomClixxASB" {
   max_size           = 2
   min_size           = 1
   force_delete       = true
-}
+}*/
 #CREATE APPLICATION LOAD BALANCER ATTACHMENT
 resource "aws_autoscaling_attachment" "attachclixxb" {
   autoscaling_group_name = aws_autoscaling_group.CustomClixxASB.id
   alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
 }
-*/
 #CREATE INTERNET GATEWAY
 resource "aws_internet_gateway" "CLIXXIG" {
   vpc_id = aws_vpc.clixxappvpc.id
@@ -335,20 +334,6 @@ resource "aws_route_table" "IGROUTER" {
 resource "aws_route_table_association" "IGROUTER1A" {
   subnet_id = aws_subnet.PUB_CLIXXA.id
   route_table_id = aws_route_table.IGROUTER.id
-}
-
-#CREATE INTERNET GATEWAY ROUTE TABLE
-resource "aws_route_table" "IGROUTERTB" {
-  vpc_id = aws_vpc.clixxappvpc.id
-  depends_on = [aws_internet_gateway.CLIXXIG]
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.CLIXXIG.id
-  }
-  tags = {
-    Name = "IGROUTERTB"
-  }
 }
 
 #ASSOCIATE ROUTE TABLE WITH INTERNET GATEWAY SECOND PUBLIC SUBNET
@@ -418,7 +403,7 @@ resource "aws_route_table_association" "natoracleb" {
   subnet_id = aws_subnet.ORACLE_PRIVB.id
   route_table_id = aws_route_table.NATROUTER.id
 }
-/*
+
 #CREATE ELASTIC IP AND ASSOCIATE WITH BASTION SERVER
 resource "aws_eip" "bastionip" {
   instance = aws_instance.bastion.id
@@ -480,4 +465,3 @@ resource "aws_lb_listener" "clixxlisten" {
     target_group_arn = aws_lb_target_group.lbtarget.arn
   }
 }
-*/
