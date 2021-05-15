@@ -488,7 +488,6 @@ resource "aws_nat_gateway" "NATCLIXXA" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.PUB_CLIXXA.id
   depends_on = [aws_internet_gateway.CLIXXIG]
-  #
 
   tags = {
     Name = "NATCLIXXA"
@@ -502,7 +501,7 @@ resource "aws_route_table" "NATROUTER" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.NATCLIXXA.id
+    nat_gateway_id = aws_nat_gateway.NATCLIXXA.id
   }
 
   tags = {
