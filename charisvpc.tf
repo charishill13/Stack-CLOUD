@@ -138,7 +138,6 @@ resource "aws_security_group" "loadbalancersga" {
   }
 }
 
-
 resource "aws_security_group" "pubtoapp" {
   name        = "pubtoapp"
   vpc_id     = aws_vpc.clixxappvpc.id
@@ -166,37 +165,8 @@ resource "aws_security_group" "pubtoapp" {
   }
 }
  
-resource "aws_security_group" "apptordsb" {
-  name        = "apptordsb"
-  vpc_id     = aws_vpc.clixxappvpc.id
-  description = "sql gives ec2 permission to enter"
-  ingress {
-    description = "HTTP to load balancer"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    security_groups = [aws_security_group.PUBSGA.id,aws_security_group.PUBSGA.id, aws_security_group.loadbalancersga.id,aws_security_group.loadbalancersga.id]
-
-  }
-  ingress {
-    description = "SSH from VPC"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    security_groups = [aws_security_group.PUBSGA.id]
-  }
-  ingress {
-    description      = "ICMP"
-    from_port        = -1
-    to_port          = -1
-    protocol         = "icmp"
-    security_groups = [aws_security_group.PUBSGA.id]
-  }
-}
-
-resource "aws_security_group" "rdstooraclea" {
-  name        = "rdstooraclea"
+resource "aws_security_group" "databasesg" {
+  name        = "databasesg"
   vpc_id     = aws_vpc.clixxappvpc.id
   description = "oracle gives rds permission to enter"
   /*ingress {
@@ -211,7 +181,7 @@ resource "aws_security_group" "rdstooraclea" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    security_groups = [aws_security_group.pubtoapp.id,aws_security_group.apptordsb.id]
+    security_groups = [aws_security_group.pubtoapp.id,aws_security_group.pubtoapp.id]
  }
 } 
 
@@ -224,14 +194,14 @@ resource "aws_security_group" "rdstooracleb" {
     from_port   = 1521
     to_port     = 1521
     protocol    = "tcp"
-    security_groups = [aws_security_group.pubtoapp.id,aws_security_group.apptordsb.id]
+    security_groups = [aws_security_group.pubtoapp.id,aws_security_group.pubtoapp.id]
   */
   ingress {
     description = "MySQL/Aurora"
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    security_groups = [aws_security_group.pubtoapp.id,aws_security_group.apptordsb.id,]
+    security_groups = [aws_security_group.pubtoapp.id,aws_security_group.pubtoapp.id,]
  }
 }
 
@@ -246,7 +216,7 @@ resource "aws_db_instance" "CustomClixxDB" {
   snapshot_identifier = "clixxdbsnap"
   identifier = "clixxdbsnap"
   db_subnet_group_name = aws_db_subnet_group.dbsubnetgrp.id
-  vpc_security_group_ids = [aws_security_group.pubtoapp.id,aws_security_group.apptordsb.id,]
+  vpc_security_group_ids = [aws_security_group.pubtoapp.id,aws_security_group.rdstooracleb.id]
   publicly_accessible= true
   skip_final_snapshot = true
 }
@@ -258,7 +228,7 @@ resource "aws_launch_configuration" "CustomClixxAS" {
   instance_type = "t2.micro"
   #iam_instance_profile = aws_iam_instance_profile.s3_clixx_profile.name
   key_name = "clixxprivkey"
-  security_groups = [aws_security_group.pubtoapp.id,aws_security_group.apptordsb.id] 
+  security_groups = [aws_security_group.pubtoapp.id,] 
   depends_on = [aws_db_instance.CustomClixxDB]
   #key_name      =  var.PATH_TO_PRIVATE_KEY                
   user_data = templatefile("CustomClixxWorks.sh", {
