@@ -195,15 +195,7 @@ resource "aws_security_group" "rdstooracleb" {
     to_port     = 1521
     protocol    = "tcp"
     security_groups = [aws_security_group.pubtoapp.id,aws_security_group.pubtoapp.id]
-  */
-  ingress {
-    description = "MySQL/Aurora"
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    security_groups = [aws_security_group.pubtoapp.id,aws_security_group.pubtoapp.id,]
- }
-}
+}*/
 
 #CREATE A DATABASE SUBNET GROUP
 resource "aws_db_subnet_group" "dbsubnetgrp" {
@@ -216,7 +208,7 @@ resource "aws_db_instance" "CustomClixxDB" {
   snapshot_identifier = "clixxdbsnap"
   identifier = "clixxdbsnap"
   db_subnet_group_name = aws_db_subnet_group.dbsubnetgrp.id
-  vpc_security_group_ids = [aws_security_group.pubtoapp.id,aws_security_group.rdstooracleb.id]
+  vpc_security_group_ids = [aws_security_group.pubtoapp.id,aws_security_group.databasesg.id]
   publicly_accessible= true
   skip_final_snapshot = true
 }
