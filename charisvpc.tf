@@ -256,7 +256,7 @@ resource "aws_launch_configuration" "CustomClixxAS" {
   name = "CUSTOMCLIXXCONFIG"
   image_id      = "ami-0742b4e673072066f"               
   instance_type = "t2.micro"
-  iam_instance_profile = aws_iam_instance_profile.s3_clixx_profile.name
+  #iam_instance_profile = aws_iam_instance_profile.s3_clixx_profile.name
   key_name = "clixxprivkey"
   security_groups = [aws_security_group.pubtoapp.id,aws_security_group.apptordsb.id] 
   depends_on = [aws_db_instance.CustomClixxDB]
@@ -302,12 +302,13 @@ resource "aws_autoscaling_group" "CustomClixxASB" {
   max_size           = 2
   min_size           = 1
   force_delete       = true
-}*/
+}
 #CREATE APPLICATION LOAD BALANCER ATTACHMENT
 resource "aws_autoscaling_attachment" "attachclixxb" {
   autoscaling_group_name = aws_autoscaling_group.CustomClixxASB.id
   alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
-}
+}*/
+
 #CREATE INTERNET GATEWAY
 resource "aws_internet_gateway" "CLIXXIG" {
   vpc_id = aws_vpc.clixxappvpc.id
