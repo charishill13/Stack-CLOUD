@@ -89,7 +89,7 @@ resource "aws_subnet" "ORACLE_PRIVB" {
     Name = "ORACLE_PRIVB"
   }
 }
-/*
+
 #CREATE PUBLIC SECURITY GROUPS
 resource "aws_security_group" "PUBSGA" {
   name        = "PUBSGA"
@@ -125,7 +125,7 @@ resource "aws_security_group" "PUBSGA" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
+/*
 resource "aws_security_group" "loadbalancersga" {
   name        = "loadbalancersga"
   vpc_id     = aws_vpc.clixxappvpc.id
@@ -137,10 +137,7 @@ resource "aws_security_group" "loadbalancersga" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-
-##################################
-
+*/
 resource "aws_security_group" "pubtoapp" {
   name        = "pubtoapp"
   vpc_id     = aws_vpc.clixxappvpc.id
@@ -196,18 +193,18 @@ resource "aws_security_group" "apptordsb" {
     security_groups = [aws_security_group.PUBSGA.id]
   }
 }
-
+/* 
 resource "aws_security_group" "rdstooraclea" {
   name        = "rdstooraclea"
   vpc_id     = aws_vpc.clixxappvpc.id
   description = "oracle gives rds permission to enter"
-  /*ingress {
+    ingress {
     description = "Oracle-RDS"
     from_port   = 1521
     to_port     = 1521
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-  }*/ /*---------------
+  }
   ingress {
     description = "MySQL/Aurora"
     from_port   = 3306
@@ -227,7 +224,7 @@ resource "aws_security_group" "rdstooracleb" {
     to_port     = 1521
     protocol    = "tcp"
     security_groups = [aws_security_group.pubtoapp.id,aws_security_group.apptordsb.id]
-  */ /* ------------------
+  
   ingress {
     description = "MySQL/Aurora"
     from_port   = 3306
