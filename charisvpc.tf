@@ -148,7 +148,7 @@ resource "aws_security_group" "pubtoapp" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    security_groups = [aws_security_group.PUBSA.id, aws_security_group.loadbalancersga.id]
+    security_groups = [aws_security_group.PUBSGA.id, aws_security_group.loadbalancersga.id]
   }
   ingress {
     description = "SSH from VPC"
@@ -176,7 +176,7 @@ resource "aws_security_group" "apptordsb" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    security_groups = [aws_security_group.PUBSGA.id,aws_security_group.PUBSA.id, aws_security_group.loadbalancersga.id,aws_security_group.loadbalancersga.id]
+    security_groups = [aws_security_group.PUBSGA.id,aws_security_group.PUBSGA.id, aws_security_group.loadbalancersga.id,aws_security_group.loadbalancersga.id]
 
   }
   ingress {
