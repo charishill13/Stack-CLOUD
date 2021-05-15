@@ -169,22 +169,14 @@ resource "aws_security_group" "databasesg" {
   name        = "databasesg"
   vpc_id     = aws_vpc.clixxappvpc.id
   description = "oracle gives rds permission to enter"
-  /*ingress {
-    description = "Oracle-RDS"
-    from_port   = 1521
-    to_port     = 1521
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }*/
   ingress {
     description = "MySQL/Aurora"
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    security_groups = [aws_security_group.pubtoapp.id,aws_security_group.pubtoapp.id]
+    security_groups = [aws_security_group.pubtoapp.id]
  }
 } 
-
 resource "aws_security_group" "rdstooracleb" {
   name        = "rdstooracleb"
   vpc_id     = aws_vpc.clixxappvpc.id
@@ -196,7 +188,7 @@ resource "aws_security_group" "rdstooracleb" {
     protocol    = "tcp"
     security_groups = [aws_security_group.pubtoapp.id,aws_security_group.pubtoapp.id]
 }*/
-
+} 
 #CREATE A DATABASE SUBNET GROUP
 resource "aws_db_subnet_group" "dbsubnetgrp" {
   name        = "dbsubnetgrp"
