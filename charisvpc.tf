@@ -242,7 +242,7 @@ resource "aws_launch_configuration" "customclixxas" {
 resource "aws_autoscaling_group" "autocustomclixxa" {
   launch_configuration  = aws_launch_configuration.customclixxas.name
   target_group_arns = [aws_lb_target_group.lbtarget.arn]
-  name_prefix        = "clixxzoneb-"
+  name_prefix        = "clixxzonea-"
   #availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
   vpc_zone_identifier= [aws_subnet.APP_PRIVA.id, aws_subnet.APP_PRIVB.id]
   desired_capacity   = 1
@@ -256,11 +256,15 @@ resource "aws_autoscaling_group" "autocustomclixxa" {
     propagate_at_launch = true
   }
 }
-
+#CREATE APPLICATION LOAD BALANCER ATTACHMENT
+resource "aws_autoscaling_attachment" "attachclixxa" {
+  autoscaling_group_name = aws_autoscaling_group.customclixxasa.id
+  alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
+/*
 #CREATE TWO AUTOSCALING GROUPS FOR EACH AVAILIBLITY ZONE
 resource "aws_autoscaling_group" "autocustomclixxb" {
   launch_configuration  = aws_launch_configuration.customclixxas.name
-  name_prefix        = "clixxzonea-"
+  name_prefix        = "clixxzoneb-"
   #availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
   vpc_zone_identifier       = [aws_subnet.APP_PRIVB.id]
   target_group_arns = [ aws_lb_target_group.lbtarget.arn ]
@@ -275,12 +279,13 @@ resource "aws_autoscaling_group" "autocustomclixxb" {
     propagate_at_launch = true
   }
 }
+
 #CREATE APPLICATION LOAD BALANCER ATTACHMENT
 resource "aws_autoscaling_attachment" "attachclixxb" {
-  autoscaling_group_name = aws_autoscaling_group.customclixxasB.id
+  autoscaling_group_name = aws_autoscaling_group.customclixxasb.id
   alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
 }
-
+*/
 #CREATE INTERNET GATEWAY
 resource "aws_internet_gateway" "CLIXXIG" {
   vpc_id = aws_vpc.clixxappvpc.id
