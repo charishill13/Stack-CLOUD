@@ -28,8 +28,8 @@ pipeline {
              steps {
                  //sh "returnStatus: true, script: 'terraform workspace new dev'"
                  //sh "terraform apply -auto-approve"
-                 sh "terraform apply  -input=false tfplan"
-                 //sh "terraform destroy  -input=false -auto-approve"
+                 //sh "terraform apply  -input=false tfplan"
+                 sh "terraform destroy  -input=false -auto-approve"
              }
          }
     }
@@ -38,9 +38,7 @@ pipeline {
         def tfHome= tool name: 'terraform-14', type: 'terraform'
         return tfHome
     }
-white_check_mark
-eyes
-raised_hands
+
 
 
 
