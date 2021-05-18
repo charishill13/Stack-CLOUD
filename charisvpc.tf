@@ -195,7 +195,7 @@ resource "aws_security_group" "rdstooracleb" {
     security_groups = [aws_security_group.pubtoapp.id,aws_security_group.pubtoapp.id]
 }*/
 } 
-/*
+
 #CREATE A DATABASE SUBNET GROUP
 resource "aws_db_subnet_group" "dbsubnetgrp" {
   name        = "dbsubnetgrp"
@@ -211,7 +211,6 @@ resource "aws_db_instance" "CustomClixxDB" {
   publicly_accessible= true
   skip_final_snapshot = true
 }
-*/
 
 #CREATE LAUNCH CONFIGURATION
 resource "aws_launch_configuration" "customclixxas" { 
@@ -229,7 +228,7 @@ resource "aws_launch_configuration" "customclixxas" {
     DB_NAME = var.DATABASE_NAME,
     USERNAME =var.USERNAME, 
     DB_PASSWORD = var.DATABASE_PASSWORD, 
-    ####RDS_ENDPOINT = aws_db_instance.CustomClixxDB.address,#######
+    RDS_ENDPOINT = aws_db_instance.CustomClixxDB.address,
     #FILE_SYSTEM_ID = aws_efs_file_system.customclixxas.id,
     APP_LB = aws_lb.clixxapplb.dns_name
 
@@ -257,7 +256,7 @@ resource "aws_autoscaling_group" "autocustomclixxa" {
     propagate_at_launch = true
   }
 }
-/*
+
 #CREATE TWO AUTOSCALING GROUPS FOR EACH AVAILIBLITY ZONE
 resource "aws_autoscaling_group" "autocustomclixxb" {
   launch_configuration  = aws_launch_configuration.customclixxas.name
