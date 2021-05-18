@@ -248,6 +248,7 @@ resource "aws_autoscaling_group" "autocustomclixxa" {
   desired_capacity   = 1
   max_size           = 2
   min_size           = 1
+  health_check_grace_period = 300
   force_delete       = true
 
   tag {
@@ -407,7 +408,7 @@ resource "aws_lb" "clixxapplb" {
   name               = "clixxapplb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.loadbalancersga.id,aws_security_group.loadbalancersga.id]
+  security_groups    = [aws_security_group.loadbalancersga.id,]
   subnets            = [aws_subnet.PUB_CLIXXA.id,aws_subnet.PUB_CLIXXB.id]
 
   enable_deletion_protection = false
@@ -431,6 +432,7 @@ resource "aws_lb_target_group" "lbtarget" {
   vpc_id   = aws_vpc.clixxappvpc.id
   health_check {
     path = "/index.php"  
+    timeout = 45
   }
 }
 
