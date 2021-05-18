@@ -239,11 +239,6 @@ resource "aws_autoscaling_group" "CustomClixxASA" {
   min_size           = 1
   force_delete       = true
 }
-#CREATE APPLICATION LOAD BALANCER ATTACHMENT
-resource "aws_autoscaling_attachment" "attachclixxa" {
-  autoscaling_group_name = aws_autoscaling_group.CustomClixxASA.id
-  alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
-}
 /*
 #CREATE TWO AUTOSCALING GROUPS FOR EACH AVAILIBLITY ZONE
 resource "aws_autoscaling_group" "CustomClixxASB" {
