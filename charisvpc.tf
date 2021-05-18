@@ -215,7 +215,7 @@ resource "aws_db_instance" "CustomClixxDB" {
 #CREATE LAUNCH CONFIGURATION
 resource "aws_launch_configuration" "customclixxas" { 
   name = "CUSTOMCLIXXCONFIG"
-  image_id      = "ami-09d19e919d57453f8"               
+  image_id      = "ami-0742b4e673072066f"               
   instance_type = "t2.micro"
   #iam_instance_profile = aws_iam_instance_profile.s3_clixx_profile.name
   key_name = "clixxprivkey"
