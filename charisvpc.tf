@@ -195,6 +195,7 @@ resource "aws_security_group" "rdstooracleb" {
     security_groups = [aws_security_group.pubtoapp.id,aws_security_group.pubtoapp.id]
 }*/
 } 
+/*
 #CREATE A DATABASE SUBNET GROUP
 resource "aws_db_subnet_group" "dbsubnetgrp" {
   name        = "dbsubnetgrp"
@@ -210,32 +211,37 @@ resource "aws_db_instance" "CustomClixxDB" {
   publicly_accessible= true
   skip_final_snapshot = true
 }
+*/
 
 #CREATE LAUNCH CONFIGURATION
-resource "aws_launch_configuration" "CustomClixxAS" { 
+resource "aws_launch_configuration" "customclixxas" { 
   name = "CUSTOMCLIXXCONFIG"
-  image_id      = "ami-0742b4e673072066f"               
+  image_id      = "ami-09d19e919d57453f8"               
   instance_type = "t2.micro"
   #iam_instance_profile = aws_iam_instance_profile.s3_clixx_profile.name
   key_name = "clixxprivkey"
   security_groups = [aws_security_group.pubtoapp.id,] 
-  depends_on = [aws_db_instance.CustomClixxDB]
+  #depends_on = [aws_db_instance.CustomClixxDB]
   #key_name      =  var.PATH_TO_PRIVATE_KEY                
-  user_data = templatefile("CustomClixxWorks.sh", {
+  user_data = templatefile("customclixx.sh", {
     MOUNT_POINT = "/var/www/html",
     REGION = var.AWS_REGION,
     DB_NAME = var.DATABASE_NAME,
     USERNAME =var.USERNAME, 
     DB_PASSWORD = var.DATABASE_PASSWORD, 
     RDS_ENDPOINT = aws_db_instance.CustomClixxDB.address,
-    #FILE_SYSTEM_ID = aws_efs_file_system.CustomClixxAS.id,
+    #FILE_SYSTEM_ID = aws_efs_file_system.customclixxas.id,
     APP_LB = aws_lb.clixxapplb.dns_name
+
+  #lifecycle {
+    #create_before_destroy = true
+  #}
     })
 }
 
 #CREATE AUTOSCALING GROUP FOR AVAILIBLITY ZONE A
-resource "aws_autoscaling_group" "CustomClixxASA" {
-  launch_configuration  = aws_launch_configuration.CustomClixxAS.name
+resource "aws_autoscaling_group" "autocustomclixxa" {
+  launch_configuration  = aws_launch_configuration.customclixxas.name
   target_group_arns = [aws_lb_target_group.lbtarget.arn]
   name_prefix        = "clixxzoneb-"
   #availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
@@ -244,11 +250,17 @@ resource "aws_autoscaling_group" "CustomClixxASA" {
   max_size           = 2
   min_size           = 1
   force_delete       = true
+
+  tag {
+    key                 = "Name"
+    value               = "autocustomclixxa"
+    propagate_at_launch = true
+  }
 }
 /*
 #CREATE TWO AUTOSCALING GROUPS FOR EACH AVAILIBLITY ZONE
-resource "aws_autoscaling_group" "CustomClixxASB" {
-  launch_configuration  = aws_launch_configuration.CustomClixxAS.name
+resource "aws_autoscaling_group" "autocustomclixxb" {
+  launch_configuration  = aws_launch_configuration.customclixxas.name
   name_prefix        = "clixxzonea-"
   #availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
   vpc_zone_identifier       = [aws_subnet.APP_PRIVB.id]
@@ -257,10 +269,16 @@ resource "aws_autoscaling_group" "CustomClixxASB" {
   max_size           = 2
   min_size           = 1
   force_delete       = true
+
+  tag {
+    key                 = "Name"
+    value               = "autocustomclixxb"
+    propagate_at_launch = true
+  }
 }
 #CREATE APPLICATION LOAD BALANCER ATTACHMENT
 resource "aws_autoscaling_attachment" "attachclixxb" {
-  autoscaling_group_name = aws_autoscaling_group.CustomClixxASB.id
+  autoscaling_group_name = aws_autoscaling_group.customclixxasB.id
   alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
 }*/
 
