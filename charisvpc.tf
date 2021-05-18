@@ -259,7 +259,7 @@ resource "aws_autoscaling_group" "autocustomclixxa" {
 
 #CREATE APPLICATION LOAD BALANCER ATTACHMENT
 resource "aws_autoscaling_attachment" "attachclixxa" {
-  autoscaling_group_name = aws_autoscaling_group.customclixxasa.id
+  autoscaling_group_name = aws_autoscaling_group.autocustomclixxa.id
   alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
 }
 /*
@@ -284,7 +284,7 @@ resource "aws_autoscaling_group" "autocustomclixxb" {
 
 #CREATE APPLICATION LOAD BALANCER ATTACHMENT
 resource "aws_autoscaling_attachment" "attachclixxb" {
-  autoscaling_group_name = aws_autoscaling_group.customclixxasb.id
+  autoscaling_group_name = aws_autoscaling_group.autocustomclixxb.id
   alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
 }
 */
