@@ -279,7 +279,7 @@ resource "aws_autoscaling_group" "autocustomclixxb" {
 resource "aws_autoscaling_attachment" "attachclixxb" {
   autoscaling_group_name = aws_autoscaling_group.customclixxasB.id
   alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
-}*/
+}
 
 #CREATE INTERNET GATEWAY
 resource "aws_internet_gateway" "CLIXXIG" {
