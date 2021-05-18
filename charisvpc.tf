@@ -256,10 +256,12 @@ resource "aws_autoscaling_group" "autocustomclixxa" {
     propagate_at_launch = true
   }
 }
+
 #CREATE APPLICATION LOAD BALANCER ATTACHMENT
 resource "aws_autoscaling_attachment" "attachclixxa" {
   autoscaling_group_name = aws_autoscaling_group.customclixxasa.id
   alb_target_group_arn   = aws_lb_target_group.lbtarget.arn
+}
 /*
 #CREATE TWO AUTOSCALING GROUPS FOR EACH AVAILIBLITY ZONE
 resource "aws_autoscaling_group" "autocustomclixxb" {
