@@ -432,7 +432,6 @@ resource "aws_lb_target_group" "lbtarget" {
   vpc_id   = aws_vpc.clixxappvpc.id
   health_check {
     path = "/index.php"  
-    timeout = 45
   }
 }
 
