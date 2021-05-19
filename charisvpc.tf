@@ -223,7 +223,7 @@ resource "aws_launch_configuration" "customclixxas" {
   image_id      = "ami-0742b4e673072066f"               
   instance_type = "t2.micro"
   #iam_instance_profile = aws_iam_instance_profile.s3_clixx_profile.name
-  key_name = "CustomClixxKey"
+  key_name = "clixxprivkey"
   security_groups = [aws_security_group.pubtoapp.id,] 
   #depends_on = [aws_db_instance.CustomClixxDB]
   #key_name      =  var.PATH_TO_PRIVATE_KEY                
