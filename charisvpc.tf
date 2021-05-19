@@ -136,6 +136,12 @@ resource "aws_security_group" "loadbalancersga" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_security_group" "pubtoapp" {
@@ -147,7 +153,7 @@ resource "aws_security_group" "pubtoapp" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    security_groups = [aws_security_group.PUBSGA.id, aws_security_group.loadbalancersga.id]
+    security_groups = [aws_security_group.loadbalancersga.id]
   }
   ingress {
     description = "SSH from VPC"
@@ -208,7 +214,6 @@ resource "aws_db_instance" "CustomClixxDB" {
   identifier = "clixxdbsnap"
   db_subnet_group_name = aws_db_subnet_group.dbsubnetgrp.id
   vpc_security_group_ids = [aws_security_group.pubtoapp.id,aws_security_group.databasesg.id]
-  publicly_accessible= true
   skip_final_snapshot = true
 }
 
@@ -218,7 +223,7 @@ resource "aws_launch_configuration" "customclixxas" {
   image_id      = "ami-0742b4e673072066f"               
   instance_type = "t2.micro"
   #iam_instance_profile = aws_iam_instance_profile.s3_clixx_profile.name
-  key_name = "clixxprivkey"
+  key_name = "CustomClixxKey"
   security_groups = [aws_security_group.pubtoapp.id,] 
   #depends_on = [aws_db_instance.CustomClixxDB]
   #key_name      =  var.PATH_TO_PRIVATE_KEY                
@@ -231,18 +236,14 @@ resource "aws_launch_configuration" "customclixxas" {
     RDS_ENDPOINT = aws_db_instance.CustomClixxDB.address,
     #FILE_SYSTEM_ID = aws_efs_file_system.customclixxas.id,
     APP_LB = aws_lb.clixxapplb.dns_name
-
-  #lifecycle {
-    #create_before_destroy = true
-  #}
     })
 }
+
 
 #CREATE AUTOSCALING GROUP FOR AVAILIBLITY ZONE A
 resource "aws_autoscaling_group" "autocustomclixxa" {
   launch_configuration  = aws_launch_configuration.customclixxas.name
   target_group_arns = [aws_lb_target_group.lbtarget.arn]
-  name_prefix        = "clixxzonea-"
   #availability_zones = ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e"]
   vpc_zone_identifier= [aws_subnet.APP_PRIVA.id, aws_subnet.APP_PRIVB.id]
   desired_capacity   = 1
@@ -413,12 +414,6 @@ resource "aws_lb" "clixxapplb" {
   subnets            = [aws_subnet.PUB_CLIXXA.id,aws_subnet.PUB_CLIXXB.id]
 
   enable_deletion_protection = false
-
-  #access_logs {
-    #bucket  = aws_s3_bucket.lb_logs.bucket
-    #prefix  = "test-lb"
-    #enabled = true
-  #}
 
   tags = {
     Environment = "clixxapplb"
