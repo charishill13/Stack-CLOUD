@@ -26,11 +26,9 @@ rm phpMyAdmin-latest-all-languages.tar.gz
 sudo yum install git -y
 git clone https://github.com/stackitgit/CliXX_Retail_Repository.git
 cp -r CliXX_Retail_Repository/* /var/www/html 
-#START MARIADB
-sudo chkconfig httpd on
-sudo systemctl status httpd
+
 #####CONFIGURE CLIXX####
-cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wp-config.php
 #cp -r wordpress/* /var/www/html/
 ###CREATE CLIXX DATABASE AND USER#
 sudo sed -i 's/database_name_here/${DB_NAME}/' /var/www/html/wp-config.php
@@ -52,9 +50,9 @@ sudo systemctl start mariadb
 sudo systemctl status httpd
 sudo systemctl start httpd
 ###UPDATE WORDPRESS URL TO LATEST INSTANCE IP ADDRESS###
-mysql -h${RDS_ENDPOINT} -D${DB_NAME} -u${USERNAME} -p${DB_PASSWORD} <<EOT
-UPDATE wp_options SET option_value = "http://${APP_LB}" WHERE option_value LIKE 'http%';
+mysql -h${RDS_ENDPOINT} -D ${DB_NAME} -u${USERNAME} -p${DB_PASSWORD} <<EOT
 use ${DB_NAME};
+UPDATE wp_options SET option_value = "http://${APP_LB}" WHERE option_value LIKE 'http%';
 commit;
 EOT
 EOF
