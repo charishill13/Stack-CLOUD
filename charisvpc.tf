@@ -215,6 +215,8 @@ resource "aws_db_instance" "CustomClixxDB" {
   db_subnet_group_name = aws_db_subnet_group.dbsubnetgrp.id
   vpc_security_group_ids = [aws_security_group.pubtoapp.id,aws_security_group.databasesg.id]
   skip_final_snapshot = true
+  username=local.db_creds.username
+  password=local.db_creds.password
 }
 
 #CREATE LAUNCH CONFIGURATION
@@ -441,4 +443,14 @@ resource "aws_lb_listener" "clixxlisten" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.lbtarget.arn
   }
+}
+
+resource "aws_secretsmanager_secret_version" "creds" {
+  secret_id     = "creds"
+}
+
+locals {
+  db_creds = jsondecode(
+    data.aws_secretsmanager_secret_version.creds.secret_string
+  )
 }
