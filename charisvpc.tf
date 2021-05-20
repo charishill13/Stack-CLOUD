@@ -445,10 +445,10 @@ resource "aws_lb_listener" "clixxlisten" {
   }
 }
 
-resource "aws_secretsmanager_secret_version" "creds" {
-  secret_id     = "creds"
+data "aws_secretsmanager_secret_version" "creds" {
+  # Fill in the name you gave to your secret
+  secret_id = "creds"
 }
-
 locals {
   db_creds = jsondecode(
     data.aws_secretsmanager_secret_version.creds.secret_string
