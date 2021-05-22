@@ -466,13 +466,14 @@ locals {
 } */
 
 #CREATE HOSTED ZONE IN ROUTE 53
-resource "aws_route53_zone" "primary" {
-  name = "stack-charis.com"
+data "aws_route53_zone" "primary" {
+  name         = "stack-charis.com"
+  private_zone = false
 }
 
 resource "aws_route53_record" "www" {
   zone_id = aws_route53_zone.primary.zone_id
-  name    = "stack-charis.com"
+  name    = "www${data.aws_route53_zone.primary.name}"
   type    = "A"
 
   alias {
@@ -482,20 +483,5 @@ resource "aws_route53_record" "www" {
   }
 }
 
-resource "aws_route53_resolver_endpoint" "lbendpoint" {
-  name      = "lbendpoint"
-  direction = "INBOUND"
 
-  security_group_ids = [
-    aws_security_group.loadbalancersga.id,
-  ]
-
-  ip_address {
-    subnet_id = aws_subnet.PUB_CLIXXA.id
-  }
-
-  ip_address {
-    subnet_id = aws_subnet.PUB_CLIXXB.id
-  } 
-}
 
