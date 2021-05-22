@@ -481,3 +481,21 @@ resource "aws_route53_record" "www" {
     evaluate_target_health = true
   }
 }
+
+resource "aws_route53_resolver_endpoint" "lbendpoint" {
+  name      = "lbendpoint"
+  direction = "INBOUND"
+
+  security_group_ids = [
+    aws_security_group.loadbalancersga.id,
+  ]
+
+  ip_address {
+    subnet_id = aws_subnet.PUB_CLIXXA.id
+  }
+
+  ip_address {
+    subnet_id = aws_subnet.PUB_CLIXXB.id
+  } 
+}
+
