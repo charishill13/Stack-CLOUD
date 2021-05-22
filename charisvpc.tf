@@ -466,14 +466,17 @@ locals {
 } */
 
 #CREATE HOSTED ZONE IN ROUTE 53
-data "aws_route53_zone" "primary" {
+resource "aws_route53_zone" "primary" {
+  name         = "stack-charis.com"
+}
+data "aws_route53_zone" "selected" {
   name         = "stack-charis.com"
   private_zone = false
 }
 
 resource "aws_route53_record" "www" {
   zone_id = aws_route53_zone.primary.zone_id
-  name    = "www${data.aws_route53_zone.primary.name}"
+  name    = "www${data.aws_route53_zone.selected.name}"
   type    = "A"
 
   alias {
