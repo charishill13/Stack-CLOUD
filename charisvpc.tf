@@ -215,8 +215,8 @@ resource "aws_db_instance" "CustomClixxDB" {
   db_subnet_group_name = aws_db_subnet_group.dbsubnetgrp.id
   vpc_security_group_ids = [aws_security_group.pubtoapp.id,aws_security_group.databasesg.id]
   skip_final_snapshot = true
-  username=local.db_creds.username
-  password=local.db_creds.password
+  #username=local.db_creds.username
+  #password=local.db_creds.password
 }
 /*
 data "aws_kms_secrets" "creds" {
@@ -464,14 +464,14 @@ locals {
     data.aws_secretsmanager_secret_version.creds.secret_string
   )
 } */
-data "aws_route53_zone" "stackcharis" {
+data "aws_route53_zone" "selected" {
   name         = "stack-charis.com."
   private_zone = false
 }
 
 resource "aws_route53_record" "www" {
-  zone_id = aws_route53_zone.stackcharis.zone_id
-  name    = "stack-charis.com"
+  zone_id = aws_route53_zone.selected.zone_id
+  name    = "www.${data.aws_route53_zone.selected.name}"
   type    = "A"
 
   alias {
