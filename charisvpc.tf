@@ -424,6 +424,7 @@ resource "aws_lb" "clixxapplb" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.loadbalancersga.id,]
   subnets            = [aws_subnet.PUB_CLIXXA.id,aws_subnet.PUB_CLIXXB.id]
+  zone_id            =  aws_route53_zone.primary.zone_id
 
   enable_deletion_protection = false
 
@@ -469,10 +470,10 @@ resource "aws_route53_zone" "primary" {
   name = "stack-charis.com"
 }
 
-data "aws_route53_zone" "selected" {
+/*data "aws_route53_zone" "selected" {
   name = "stack-charis.com"
   private_zone = false
-}
+}*/
 
 resource "aws_route53_record" "www" {
   zone_id = aws_route53_zone.primary.zone_id
