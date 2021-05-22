@@ -218,7 +218,17 @@ resource "aws_db_instance" "CustomClixxDB" {
   username=local.db_creds.username
   password=local.db_creds.password
 }
+/*
+data "aws_kms_secrets" "creds" {
+  secret {
+    name    = "db"
+    payload = file("${path.module}/creds.yml.encrypted")
+  }
+}
 
+locals {
+  db_creds = yamldecode(data.aws_kms_secrets.creds.plaintext["db"])
+} */
 #CREATE LAUNCH CONFIGURATION
 resource "aws_launch_configuration" "customclixxas" { 
   name = "CUSTOMCLIXXCONFIG"
@@ -445,7 +455,7 @@ resource "aws_lb_listener" "clixxlisten" {
   }
 }
 
-data "aws_secretsmanager_secret_version" "creds" {
+/*data "aws_secretsmanager_secret_version" "creds" {
   # Fill in the name you gave to your secret
   secret_id = "creds"
 }
@@ -453,4 +463,24 @@ locals {
   db_creds = jsondecode(
     data.aws_secretsmanager_secret_version.creds.secret_string
   )
+} */
+data "aws_route53_zone" "stackcharis" {
+  name         = "stack-charis.com."
+  private_zone = false
 }
+
+resource "aws_route53_record" "www" {
+  zone_id = aws_route53_zone.stackcharis.zone_id
+  name    = "stack-charis.com"
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.clixxapplb.dns_name
+    zone_id                = aws_lb.clixxapplb.zone_id
+    evaluate_target_health = true
+  }
+}
+
+
+
+
