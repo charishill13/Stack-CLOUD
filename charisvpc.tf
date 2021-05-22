@@ -464,14 +464,14 @@ locals {
     data.aws_secretsmanager_secret_version.creds.secret_string
   )
 } */
-data "aws_route53_zone" "selected" {
-  name         = "stack-charis.com."
-  private_zone = false
+
+resource "aws_route53_zone" "primary" {
+  name = "stack-charis.com"
 }
 
 resource "aws_route53_record" "www" {
-  zone_id = aws_route53_zone.selected.zone_id
-  name    = "www.${data.aws_route53_zone.selected.name}"
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "www.${data.aws_route53_zone.primary.name}"
   type    = "A"
 
   alias {
