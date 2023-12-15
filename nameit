@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFormation script for testmmasg'
+
+
+
+Resources:
+MyAutoScalingGroup:
+Type: 'AWS::AutoScaling::AutoScalingGroup'
+Properties:
+LaunchTemplate:
+LaunchTemplateId: 'lt-0000000001'
+Version: '11'
+MinSize: 3
+MaxSize: 3
+DesiredCapacity: 3
+VPCZoneIdentifier:
+- 'subnet-0000000002'
+- 'subnet-0000000001'
+- 'subnet-0000000000'
+Tags:
+- Key: 'Name'
+Value: 'testmmasg'
+PropagateAtLaunch: true
+
+
+
+MyResourceGroup:
+Type: 'AWS::ResourceGroups::Group'
+Properties:
+Name: 'MyResourceGroup'
+Description: 'A resource group'
+ResourceQuery:
+Type: 'TAG_FILTERS_1_0'
+Query:
+ResourceTypeFilters:
+- 'AWS::EC2::Instance'
+TagFilters:
+- Key: 'Name'
+Values:
+- 'testmmasg'
+
+
+
+MySSMAssociation:
+Type: 'AWS::SSM::Association'
+DependsOn: 'MyAutoScalingGroup'
+Properties:
+Name: 'USTST-Motion-Manage-Setup'
+Targets:
+- Key: 'tag:aws:autoscaling:groupName'
+Values:
+- 'testmmasg'
+
+
+
+MyLifecycleHookRole:
+Type: 'AWS::IAM::Role'
+Properties:
+AssumeRolePolicyDocument:
+Version: '2012-10-17'
+Statement:
+- Effect: 'Allow'
+Principal:
+Service:
+- 'http://autoscaling.amazonaws.com'
+Action: 'sts:AssumeRole'
+Path: '/'
+Policies:
+- PolicyName: 'AutoScalingLifecycleHook'
+PolicyDocument:
+Version: '2012-10-17'
+Statement:
+- Effect: 'Allow'
+Action: 'autoscaling:CompleteLifecycleAction'
+Resource: '*'
+- PolicyName: 'SSMAutomationExecution'
+PolicyDocument:
+Version: '2012-10-17'
+Statement:
+- Effect: 'Allow'
+Action:
+- 'ssm:StartAutomationExecution'
+Resource: '*'
+
+
+
+MyLifecycleHook:
+Type: 'AWS::AutoScaling::LifecycleHook'
+DependsOn: 'MyLifecycleHookRole'
+Properties:
+AutoScalingGroupName: !Ref 'MyAutoScalingGroup'
+LifecycleTransition: 'autoscaling:EC2_INSTANCE_LAUNCHING'
+RoleARN: !GetAtt 'MyLifecycleHookRole.Arn'
+HeartbeatTimeout: 60
+DefaultResult: 'CONTINUE'
+
+
+
+Outputs:
+MyAutoScalingGroupName:
+Description: 'Name of the Auto Scaling Group'
+Value: !Ref 'MyAutoScalingGroup'
+
